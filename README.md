@@ -1,50 +1,55 @@
-# Welcome to your Expo app 👋
+# 🎥 Video Player App - Estilo YouTube Kids
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Una app móvil hecha con **React Native + Expo**, pensada para niños. Permite reproducir videos seguros y muestra videos relacionados, con una interfaz sencilla, animaciones suaves y controles táctiles amigables.
 
-## Get started
+## ✨ Características
 
-1. Install dependencies
+- Reproductor de video a pantalla completa usando `expo-av`.
+- Detección de orientación de pantalla con `expo-screen-orientation`.
+- Ocultamiento de UI nativa con `expo-system-ui`.
+- Lista de videos relacionados que aparece automáticamente al girar la pantalla (en tablets).
+- FAB animado (Floating Action Button) para mostrar u ocultar la lista de videos relacionados.
+- Navegación entre videos sin recargar el componente.
+- Interfaz responsiva, adaptada para teléfonos y tablets.
+- Animaciones con `react-native-reanimated`.
 
-   ```bash
-   npm install
-   ```
+## 📦 Tecnologías usadas
 
-2. Start the app
+- React Native + Expo
+- TypeScript
+- `expo-av` para el video
+- `react-navigation` para navegación
+- `react-native-reanimated` para animaciones
+- `@expo/vector-icons` para iconos
 
-   ```bash
-   npx expo start
-   ```
+## 📱 Pantallas principales
 
-In the output, you'll find options to open the app in a
+- **VideoPlayerScreen**: Reproduce un video, permite ver videos relacionados y cambiar de video sin salir de la vista actual.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🧠 Cómo funciona
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- El video se reproduce automáticamente y se muestra a pantalla completa si el usuario gira el dispositivo.
+- Si el dispositivo es una tablet en modo horizontal, los videos relacionados se muestran automáticamente.
+- Al tocar la pantalla, aparece un botón flotante (`FAB`) para mostrar/ocultar manualmente los relacionados.
+- Al seleccionar un video relacionado, el reproductor se reemplaza por el nuevo sin salir de la pantalla.
 
-## Get a fresh project
-
-When you're ready, run:
+## ▶️ Comandos útiles
 
 ```bash
-npm run reset-project
-```
+# Instalar dependencias
+npm install
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+# Ejecutar en modo desarrollo
+npx expo start
 
-## Learn more
+📝 Notas
+	•	Asegúrate de subir tus videos o enlaces desde un backend seguro.
+	•	Esta app está diseñada para ejecutarse 100% offline si se cachean previamente los videos.
 
-To learn more about developing your project with Expo, look at the following resources:
+📌 Por hacer
+	•	Agregar filtros por categoría
+	•	Bloqueo parental
+	•	Integración con base de datos
+	•	Buscador de videos
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+© 2025 Anthony Chilan
