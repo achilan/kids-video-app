@@ -1,10 +1,11 @@
 import { fetchAllVideos } from "@/database/db"; // tu función para traer todos los videos
 import { EvilIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,47 +16,63 @@ import {
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  const [refreshing, setRefreshing] = useState(false);
   const [groupedVideos, setGroupedVideos] = useState<{
     [category: string]: any[];
   }>({});
-  const [allvideos,setAllvideos] = useState<any>([]);
+  const [allvideos, setAllvideos] = useState<any>([]);
   const { width } = useWindowDimensions();
   const isTablet = width >= 700;
- const loadVideos = async () => {
-      const all = await fetchAllVideos(); // [{ id, title, category, uri }]
-      console.log("Videos cargados:", all);
-      setAllvideos(all)
-      const grouped: { [category: string]: any[] } = {};
+  const loadVideos = async () => {
+    const all = await fetchAllVideos(); // [{ id, title, category, uri }]
+    console.log("Videos cargados:", all);
+    setAllvideos(all);
+    const grouped: { [category: string]: any[] } = {};
 
-      for (const video of all) {
-        if (!grouped[video.category]) grouped[video.category] = [];
-        grouped[video.category].push(video);
-      }
+    for (const video of all) {
+      if (!grouped[video.category]) grouped[video.category] = [];
+      grouped[video.category].push(video);
+    }
 
-      setGroupedVideos(grouped);
-    };
+    setGroupedVideos(grouped);
+  };
   useEffect(() => {
     console.log("Cargando videos...");
-   
 
     loadVideos();
   }, []);
 
-const goToPlayer = (video: any) => {
-  navigation.navigate("Player" as never, {
-    video,
-    relatedVideos: allvideos,
-    isFullscreen: true, // opcional, para iniciar en fullscreen
-  } as never);
-};
-useLayoutEffect(() => {
-  navigation.setOptions({
-    headerShown: false, // ocultar el header por defecto
-  });
-  loadVideos(); // cargar videos al montar el componente
-}, [navigation]);
+  const goToPlayer = (video: any) => {
+    navigation.navigate(
+      "Player" as never,
+      {
+        video,
+        relatedVideos: allvideos,
+        isFullscreen: true, // opcional, para iniciar en fullscreen
+      } as never
+    );
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      loadVideos(); // carga los videos al entrar a la pantalla
+    }, [])
+  );
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={async () => {
+            setRefreshing(true);
+            await loadVideos();
+            setRefreshing(false);
+          }}
+          colors={["#FF0000"]}
+          tintColor="#fff"
+        />
+      }
+    >
       <Text style={[styles.header, isTablet && { fontSize: 32 }]}>Videos</Text>
       {Object.entries(groupedVideos).map(([category, videos]) => (
         <View key={category} style={styles.categoryBlock}>
