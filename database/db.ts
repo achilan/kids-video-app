@@ -33,7 +33,7 @@ export async function insertVideo(
   title: string,
   category: string,
   uri: string,
-  thumbnail:string
+  thumbnail: string
 ) {
   if (!title || !category || !uri) {
     throw new Error("Todos los campos son obligatorios");
@@ -44,7 +44,7 @@ export async function insertVideo(
   const stmt = await db.prepareAsync(
     `INSERT INTO videos (title, category, uri,thumbnail) VALUES (?, ?, ?,?)`
   );
-  await stmt.executeAsync([title, category, uri,thumbnail]);
+  await stmt.executeAsync([title, category, uri, thumbnail]);
   await stmt.finalizeAsync();
   console.log("✅ Video insertado:", title, category);
 }
@@ -87,9 +87,28 @@ export async function fetchAllVideos() {
 
 // Eliminar video (opcional para admin)
 export async function deleteVideoById(id: number) {
-  const db = await getDB();
-  const stmt = await db.prepareAsync(`DELETE FROM videos WHERE id = ?`);
-  await stmt.executeAsync([id]);
-  await stmt.finalizeAsync();
-  console.log(`🗑️ Video eliminado ID: ${id}`);
+  try {
+    console.log(`🗑️ Eliminando video con ID: ${id}`);
+    if (typeof id !== "number" || isNaN(id)) {
+      throw new Error("ID inválido");
+    }
+
+    await initDB(); // asegúrate que la DB y tabla existen
+    const db = await getDB();
+
+    const stmt = await db.prepareAsync(`DELETE FROM videos WHERE id = ?`);
+    const result = await stmt.executeAsync([id]);
+    await stmt.finalizeAsync();
+
+    if (result.changes === 0) {
+      console.warn(`⚠️ No se encontró video con ID: ${id}`);
+      return false;
+    }
+
+    console.log(`🗑️ Video eliminado correctamente. ID: ${id}`);
+    return true;
+  } catch (error) {
+    console.error(`❌ Error al eliminar video ID ${id}:`, error);
+    throw new Error("No se pudo eliminar el video");
+  }
 }
