@@ -102,7 +102,7 @@ export default function HomeScreen() {
                       resizeMode="cover"
                     />
                   )}
-                  
+
                   {!item.thumbnail && (
                     <Image
                       source={require("@/assets/images/animatedkid.jpg")} // imagen por defecto
@@ -113,7 +113,7 @@ export default function HomeScreen() {
                       resizeMode="cover"
                     />
                   )}
-{/*                   <Image
+                  {/*                   <Image
                     source={{ uri: item.thumbnail ? item.thumbnail : null }}
                     style={[
                       styles.thumbnail,
