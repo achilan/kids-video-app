@@ -92,14 +92,35 @@ export default function HomeScreen() {
                 activeOpacity={0.8}
               >
                 <View style={styles.thumbnailWrapper}>
-                  <Image
-                    source={{ uri: item.thumbnail }}
+                  {item.thumbnail && (
+                    <Image
+                      source={{ uri: item.thumbnail }}
+                      style={[
+                        styles.thumbnail,
+                        isTablet && styles.thumbnailTablet,
+                      ]}
+                      resizeMode="cover"
+                    />
+                  )}
+                  
+                  {!item.thumbnail && (
+                    <Image
+                      source={require("@/assets/images/animatedkid.jpg")} // imagen por defecto
+                      style={[
+                        styles.thumbnail,
+                        isTablet && styles.thumbnailTablet,
+                      ]}
+                      resizeMode="cover"
+                    />
+                  )}
+{/*                   <Image
+                    source={{ uri: item.thumbnail ? item.thumbnail : null }}
                     style={[
                       styles.thumbnail,
                       isTablet && styles.thumbnailTablet,
                     ]}
                     resizeMode="cover"
-                  />
+                  /> */}
                   <View style={styles.playOverlay}>
                     <EvilIcons name="play" style={styles.playIcon} />
                   </View>

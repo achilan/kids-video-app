@@ -13,7 +13,7 @@ import {
   Text,
   TouchableWithoutFeedback,
   useWindowDimensions,
-  View
+  View,
 } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -131,7 +131,7 @@ export default function VideoPlayerScreen() {
 
           {!isFullscreen && (
             <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
-             {/*  <View
+              {/*  <View
                 style={[
                   styles.backButton,
                   Platform.OS === "ios" && { top: 80 },
@@ -143,8 +143,9 @@ export default function VideoPlayerScreen() {
                 name="arrow-back"
                 size={60}
                 color="#fff"
-                style={[styles.backButton
-                  , Platform.OS === "ios" && { top: 80 }
+                style={[
+                  styles.backButton,
+                  Platform.OS === "ios" && { top: 80 },
                 ]}
                 onPress={() => navigation.goBack()}
               />
@@ -157,12 +158,12 @@ export default function VideoPlayerScreen() {
         <View
           style={{
             position: isFullscreen ? "absolute" : "relative",
-            bottom: isFullscreen ? 0 : 80,
+            bottom: 200,
             width: "100%",
             backgroundColor: isFullscreen ? "rgba(0,0,0,0.6)" : "#121212",
             paddingVertical: 10,
             paddingHorizontal: 10,
-            zIndex: 10,
+            zIndex: 9999,
             ...(!isFullscreen && styles.relatedInFullscreen),
           }}
         >
@@ -182,10 +183,18 @@ export default function VideoPlayerScreen() {
                 <Animated.View
                   style={[styles.relatedCardSmall, fabAnimatedStyle]}
                 >
-                  <Image
-                    source={{ uri: item.thumbnail || item.uri }}
-                    style={styles.thumbnailSmall}
-                  />
+                  {item.thumbnail && (
+                    <Image
+                      source={{ uri: item.thumbnail }}
+                      style={styles.thumbnailSmall}
+                    />
+                  )}
+                  {!item.thumbnail && (
+                    <Image
+                      source={require("@/assets/images/animatedkid.jpg")}
+                      style={styles.thumbnailSmall}
+                    />
+                  )}
                 </Animated.View>
               </TouchableWithoutFeedback>
             )}

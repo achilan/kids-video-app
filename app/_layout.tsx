@@ -10,6 +10,7 @@ import AdminScreen from "@/screens/AdminScreen";
 import HomeScreen from "@/screens/HomeScreen";
 import ParentalLockScreen from "@/screens/ParentalLockScreen";
 import VideoPlayerScreen from "@/screens/VideoPlayerScreen";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -17,8 +18,16 @@ const Tab = createBottomTabNavigator();
 function HomeStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Player" component={VideoPlayerScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Player"
+        component={VideoPlayerScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }
@@ -26,47 +35,75 @@ function HomeStack() {
 function AdminStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="AdminScreen" component={AdminScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="ParentalLock" component={ParentalLockScreen} options={{ title: "Código" }} />
+      <Stack.Screen
+        name="AdminScreen"
+        component={AdminScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ParentalLock"
+        component={ParentalLockScreen}
+        options={{ title: "Código" }}
+      />
     </Stack.Navigator>
   );
 }
 
 export default function RootLayout() {
   useEffect(() => {
-    initDB().then(() => console.log("DB lista")).catch(console.log);
+    initDB()
+      .then(() => console.log("DB lista"))
+      .catch(console.log);
   }, []);
 
   return (
     <PaperProvider>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            headerShown: false,
-            tabBarStyle: {
-              backgroundColor: "#121212", // negro total
-              height: 70,
-              paddingBottom: 10,
-              borderTopWidth: 0.5,
-              borderColor: "#333",
-            },
-            tabBarLabelStyle: {
-              fontSize: 14,
-              fontWeight: "bold",
-            },
-            tabBarIcon: ({ color }) => {
-              let iconName;
-              if (route.name === "Videos") iconName = "home";
-              else if (route.name === "Admin") iconName = "lock-closed";
-              return <Ionicons name={iconName as any} size={28} color={color} />;
-            },
-            tabBarActiveTintColor: "#FF0000", // rojo YouTube
-            tabBarInactiveTintColor: "#888",   // gris suave
-          })}
-        >
-          <Tab.Screen name="Videos" component={HomeStack} />
-          <Tab.Screen name="Admin" component={AdminStack} />
-        </Tab.Navigator>
-        <StatusBar style="light" />
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarStyle: {
+            backgroundColor: "#121212", // negro total
+            height: 70,
+            paddingBottom: 10,
+            borderTopWidth: 0.5,
+            borderColor: "#333",
+          },
+          tabBarLabelStyle: {
+            fontSize: 14,
+            fontWeight: "bold",
+          },
+          tabBarIcon: ({ color }) => {
+            let iconName;
+            if (route.name === "Videos") iconName = "home";
+            else if (route.name === "Admin") iconName = "lock-closed";
+            return <Ionicons name={iconName as any} size={28} color={color} />;
+          },
+          tabBarActiveTintColor: "#FF0000", // rojo YouTube
+          tabBarInactiveTintColor: "#888", // gris suave
+        })}
+      >
+        <Tab.Screen
+          name="Videos"
+          component={HomeStack}
+          options={({ route }) => {
+            const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
+            const isPlayer = routeName === "Player";
+
+            return {
+              tabBarStyle: {
+                display: isPlayer ? "none" : "flex",
+                backgroundColor: "#121212",
+                height: 70,
+                paddingBottom: 10,
+                borderTopWidth: 0.5,
+                borderColor: "#333",
+              },
+            };
+          }}
+        />
+        <Tab.Screen name="Admin" component={AdminStack} />
+      </Tab.Navigator>
+      <StatusBar style="light" />
     </PaperProvider>
   );
 }
